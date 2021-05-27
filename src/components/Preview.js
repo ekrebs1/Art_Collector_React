@@ -1,23 +1,37 @@
-import React from 'react';
+import React from "react";
 
 /**
  * We need to import fetchQueryResultsFromURL since we will sometimes have urls in info.prev and info.next
  * which are query urls.
  */
-import { fetchQueryResultsFromURL } from '../api';
+import { fetchQueryResultsFromURL } from "../api";
 
-const Preview = (props) => {
+const Preview = ({
+  setFeaturedResult,
+  setIsLoading,
+  setSearchResults,
+  searchResults: { info, records },
+}) => {
   /**
    * Destructure setSearchResults, setFeaturedResult, and setIsLoading from props
    * and also destructure info and records from props.searchResults
-   * 
-   * You need info, records, setSearchResults, setFeaturedResult, and setIsLoading as available constants
+   */
+  // const { setSearchResults, setFeaturedResult, setIsLoading } = props;
+
+  // const { info, records } = props.searchResults;
+
+  /* You need info, records, setSearchResults, setFeaturedResult, and setIsLoading as available constants
    */
 
+  //  const [searchResults, setSearchResults] = useState({ info: {}, records: [] });
+
+  //  const [featuredResult, setFeaturedResult] = useState(null);
+
+  //  const [isLoading, setIsLoading] = useState(false);
 
   /**
    * Don't touch this function, it's good to go.
-   * 
+   *
    * It has to be defined inside the Preview component to have access to setIsLoading, setSearchResults, etc...
    */
   async function fetchPage(pageUrl) {
@@ -33,22 +47,30 @@ const Preview = (props) => {
     }
   }
 
-  return <aside id="preview">
-    <header className="pagination">
-      {/* This button should be disabled if nothing is set in info.prev, and should call fetchPage with info.prev when clicked */}
-      <button 
-        disabled={} 
-        className="previous"
-        onClick={}>Previous</button>
-      {/* This button should be disabled if nothing is set in info.next, and should call fetchPage with info.next when clicked */}
-      <button
-        disabled={}
-        className="next"
-        onClick={}>Next</button>
-    </header>
-    <section className="results">
-      {
-        /* Here we should map over the records, and render something like this for each one:
+  return (
+    <aside id='preview'>
+      <header className='pagination'>
+        {/* This button should be disabled if nothing is set in info.prev, and should call fetchPage with info.prev when clicked */}
+        <button
+          disabled={!info.prev}
+          className='previous'
+          onClick={() => {
+            fetchPage(info.prev);
+          }}>
+          Previous
+        </button>
+        {/* This button should be disabled if nothing is set in info.next, and should call fetchPage with info.next when clicked */}
+        <button
+          disabled={!info.next}
+          className='next'
+          onClick={() => {
+            fetchPage(info.next);
+          }}>
+          Next
+        </button>
+      </header>
+      <section className='results'>
+        {/* Here we should map over the records, and render something like this for each one:
           <div  
             key={ index }
             className="object-preview"
@@ -63,10 +85,26 @@ const Preview = (props) => {
               // if the record.title exists, add this: <h3>{ record.title }</h3>, otherwise show this: <h3>MISSING INFO</h3>
             }
           </div>
-        */
-      }
-    </section>
-  </aside>
-}
+        */}
+
+        {records.map((info, index) => (
+          <div
+            key={index}
+            className='object-preview'
+            onClick={(event) => {
+              event.preventDefault();
+              setFeaturedResult(info);
+              // set the featured result to be this record, using setFeaturedResult
+            }}>
+            {info.primaryimageurl ? (
+              <img src={info.primaryimageurl} alt={info.description} />
+            ) : null}
+            {info.title ? <h3>{info.title}</h3> : <h3>MISSING INFO</h3>}
+          </div>
+        ))}
+      </section>
+    </aside>
+  );
+};
 
 export default Preview;
