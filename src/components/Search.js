@@ -28,9 +28,9 @@ import {
  * Make sure to console.error on caught errors from the API methods.
  */
 
-const Search = (props) => {
+const Search = ({ setIsLoading, setSearchResults }) => {
   // Make sure to destructure setIsLoading and setSearchResults from the props
-  const { setIsLoading, setSearchResults } = props;
+  //const { setIsLoading, setSearchResults } = props;
 
   //CENTURIES DROP DOWN List
   const [centuryList, setCenturyList] = useState([]);
